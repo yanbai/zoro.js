@@ -1,3 +1,4 @@
+//0.1.0
 function Extend(tgt,src){for(var i in src){tgt[i]=src[i]}return tgt};
 Extend(String.prototype,{ltrim:function(){return this.replace(/^\s+/,'')},rtrim:function(){return this.replace(/\s+$/,'')},trim:function(){return this.replace(/^\s+|\s+$/g,'')}});
 Array.prototype.has = function(e){for(var i in this){if(this[i]===e)return true;}return false};
