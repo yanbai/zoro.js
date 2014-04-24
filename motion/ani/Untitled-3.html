@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+</head>
+
+<body>
+<a id="lawTab_1" class="on" onclick="A.fadeout(G('lawTab_content_1'));return false;" href="">案例分析</a>
+<a id="lawTab_2" onclick="A.fadein(G('lawTab_content_1'));return false;" href="" >律师博文</a>
+<a id="lawTab_3" onclick="sel_tag('lawTab',3,3);return false;" href="">政策法规</a>
+<ul id="lawTab_content_1" style="">
+<li>1</li>
+</ul>
+<ul id="lawTab_content_2" style="">
+<li>2</li>
+</ul>
+<ul id="lawTab_content_3" style="">
+<li>3</li>
+</ul>
+</body>
+<script>
+
+var C={
+    isIE : document.all?true:false,
+    isIE6: this.isIE && ([/MSIE (\d)\.0/i.exec(navigator.userAgent)][0][1]==6),
+	getElementTop : function(ele){
+		var actualTop = ele.offsetTop;
+		var current = ele.offsetParent;
+		while(current !== null){
+			actualTop += current.offsetTop;
+　　　　　　current = current.offsetParent;
+		}
+		return actualTop;
+	},
+	getElements : function(parentsElement , selectTagName , className){
+		if(!className){
+			return parentsElement.getElementsByTagName(selectTagName)
+		}
+		else{
+			var a = parentsElement.getElementsByTagName(selectTagName);
+			var b = [];
+			for(var i = 0, l=a.length ; i<l ; i++){
+				if(a[i].className == className){b.push(a[i])}
+			}
+			return b.length ? b : null;
+		}
+	},
+	elementsToArray : function(elements,array){
+		if(elements.length>0){for(var i=elements.length-1;i>=0;i--){array.push(elements[i])}};
+		return array;
+	}
+};
+function G(a){return typeof a==='string'?document.getElementById(a):a};
+function sel_tag(obj,num,no){if(!no){no=2;};var endi=1+no;for(i=1;i<endi;i++){if(i==num){G(obj+'_'+i).className='on';G(obj+'_'+i).blur();G(obj+'_content_'+i).style.display='block';}else{G(obj+'_'+i).className='off';G(obj+'_content_'+i).style.display = 'none';}}}
+var Tween = {
+	Linear: function(t,b,c,d){ return c*t/d + b; },
+    Quad: {
+        easeOut: function(t,b,c,d){
+            return -c *(t/=d)*(t-2) + b;
+        }
+    }
+};												
+var A = {
+	tabClick : function(obj,num,no){if(!no){no=2;};var endi=1+no;for(i=1;i<endi;i++){if(i==num){G(obj+'_'+i).className='on';G(obj+'_'+i).blur();G(obj+'_content_'+i).style.display='block';}else{G(obj+'_'+i).className='off';G(obj+'_content_'+i).style.display = 'none';}}},
+	positionAnimate : function(ele , obj , time){
+		var defaultProperty = {};
+		var b=[],c=[];
+		for(var i in obj){
+			if(ele.style[i]){}else {ele.style[i] = '0px'}
+			defaultProperty[i] = ele.style[i]   //defaultProperty为原始样式对象
+		}			   
+		if(!time){
+			var t = 0;
+			var d = 10;
+			for(var i in obj){
+				var j = 0;
+				b[j] = parseInt(defaultProperty[i],10);
+				c[j] = parseInt(obj[i],10) - b;
+				j++
+			}
+			function Run(){
+				
+				for(var i in obj){
+			
+					var j = 0;
+					ele.style[i] = Math.ceil(Tween.Linear(t,b[j],c[j],d)) + "px";
+					
+				}
+				if(t<d){ t++; setTimeout(Run, 10); }
+			}
+			Run();
+		}	
+	},
+	fadein : function(ele){
+		var t = 0,
+			d = 5,
+			b = 0,
+			c = 1;
+		ele.style.display='inline-block';
+		if(C.isIE){
+			var run = function(){
+				ele.style.filter = "Alpha(opacity="+String(100*Tween.Linear(t,b,c,d))+")";
+				if(t<d){ t++; setTimeout(arguments.callee, 10); }
+			}
+			run();
+		}
+		else{
+			var run = function(){
+				ele.style.opacity = Tween.Linear(t,b,c,d);
+				if(t<d){ t++; setTimeout(arguments.callee, 10); }
+			}
+			run();
+		}
+	},
+	fadeout : function(ele){
+		var t = 0,
+			d = 5,
+			b = 1,
+			c = -1;
+		if(!C.isIE){
+			var run = function(){
+				ele.style.opacity = Tween.Linear(t,b,c,d);
+				if(t<d){ t++; setTimeout(arguments.callee, 10); }
+				if(ele.style.opacity==0){ele.style.display = 'none'}
+			}
+		}
+		else{
+			var run = function(){
+				ele.style.filter = "Alpha(opacity="+String(100*Tween.Linear(t,b,c,d))+")";
+				if(t<d){ t++; setTimeout(arguments.callee, 10); }
+				if(ele.style.filter=="Alpha(opacity=0)"){ele.style.display = 'none'}
+			}
+		}
+		run();
+	}
+};
+
+</script>
+</html>

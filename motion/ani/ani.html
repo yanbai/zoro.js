@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<style>
+#al{width:50px; position:absolute;}
+</style>
+</head>
+
+<body>
+<div id="al" style="">nihao</div>
+<script>
+var C={
+    isIE : document.all?true:false,
+    isIE6: this.isIE && ([/MSIE (\d)\.0/i.exec(navigator.userAgent)][0][1]==6),
+	getElementTop : function(ele){
+		var actualTop = ele.offsetTop;
+		var current = ele.offsetParent;
+		while(current !== null){
+			actualTop += current.offsetTop;
+　　　　　　current = current.offsetParent;
+		}
+		return actualTop;
+	}
+};
+var Tween = {
+	Linear: function(t,b,c,d){ return c*t/d + b; },
+    Quad: {
+        easeOut: function(t,b,c,d){
+            return -c *(t/=d)*(t-2) + b;
+        }
+    }
+}
+
+var div=document.getElementById('al');
+function setOpacity(ele,opacity){
+	if(!C.isIE){ele.style.opacity = opacity}
+	else{var opacity = String(opacity*100);ele.style.filter = "Alpha(opacity="+opacity+")"}
+}
+
+
+/*
+function opacityAnimate(ele , obj){ //obj为目标样式对象
+	var defaultProperty = {};
+	alert(ele.style.opacity);
+
+	if(ele.style.opacity){}else {ele.style[i] = '0px'}
+	defaultProperty[i] = ele.style[i]   //defaultProperty为原始样式对象
+	
+	                           
+	if(!C.isIE){
+		t = 0;
+		d = 40;
+		
+		b = parseInt(defaultProperty[opacity],10);
+		c = parseInt(obj[opacity],10) - b;
+		
+		function Run(){
+			
+			
+			ele.style.opacity = Math.ceil(Tween.Linear(t,b,c,d));
+			
+			if(t<d){ t++; setTimeout(Run, 10); }
+		}
+		
+		Run();
+	}
+}
+*/
+
+function fadein(ele){
+	var t = 0,
+		d = 30,
+		b = 0,
+		c = 1;
+
+	if(C.isIE){
+		var run = function(){
+			ele.style.filter = "Alpha(opacity="+String(100*Tween.Linear(t,b,c,d))+")";
+			if(t<d){ t++; setTimeout(arguments.callee, 10); }
+		}
+		run();
+	}
+	else{
+		var run = function(){
+			ele.style.opacity = Tween.Linear(t,b,c,d);
+			if(t<d){ t++; setTimeout(arguments.callee, 10); }
+		}
+		run();
+	}
+}
+
+function fadeout(ele){
+	var t = 0,
+		d = 30,
+		b = 1,
+		c = -1;
+	if(!C.isIE){
+		var run = function(){
+			ele.style.opacity = Tween.Linear(t,b,c,d);
+			if(t<d){ t++; setTimeout(arguments.callee, 10); }
+		}
+	}
+	else{
+		var run = function(){
+			ele.style.filter = "Alpha(opacity="+String(100*Tween.Linear(t,b,c,d))+")";
+			if(t<d){ t++; setTimeout(arguments.callee, 10); }
+		}
+	}
+	run();
+}
+fadeout(div)
+</script>
+</body>
+</html>
